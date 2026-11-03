@@ -23,4 +23,15 @@
 //   const rateLimit = require('express-rate-limit');
 //   module.exports = rateLimit({ ...options });
 
-module.exports = (req, res, next) => next(); // TODO: replace this stub
+const rateLimit = require('express-rate-limit');
+
+// For multiple app instances, a rate-limit-redis store can replace the default
+// in-memory store so every instance shares the same counters; otherwise, each
+// instance tracks requests separately and clients can exceed the intended limit.
+module.exports = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,
+});
